@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crops List</title>
+    <link rel="stylesheet" href="style_searchbox.css" />
+  </head>
+  <body>
+    <!-- Header Section -->
+    <section class="header">
+      <nav>
+        <a href="index1.html"><img src="images/logo.webp" alt="Logo" /></a>
+        <ul>
+          <li><a href="index1.html">HOME</a></li>
+          <li><a href="about.html">ABOUT</a></li>
+          <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <!-- Crops List Section -->
+    <section class="crops-list">
+      <div class="search-container">
+        <h1>List of 100 Crops</h1>
+        <input
+          type="text"
+          id="search-box"
+          placeholder="Search crops..."
+          onkeyup="filterCrops()"
+        />
+      </div>
+      <ul id="crop-list"></ul>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+      const crops = [
+        "Wheat", "Rice", "Maize", "Barley", "Millet", "Sorghum", "Soybean",
+        "Cotton", "Sugarcane", "Groundnut", "Sunflower", "Pigeon Pea",
+        "Lentils", "Peas", "Chickpeas", "Tomato", "Potato", "Onion",
+        "Garlic", "Carrot", "Spinach", "Cabbage", "Cauliflower",
+        "Eggplant", "Okra", "Pumpkin", "Watermelon", "Cucumber", "Mango",
+        "Banana", "Guava", "Papaya", "Lychee", "Grapes", "Orange",
+        "Lemon", "Pineapple", "Coconut", "Tea", "Coffee", "Apple",
+        "Peach", "Pear", "Plum", "Cherry", "Strawberry", "Raspberry",
+        "Blueberry", "Blackberry", "Avocado", "Kiwifruit", "Durian",
+        "Jackfruit", "Breadfruit", "Dragonfruit", "Fig", "Dates",
+        "Olive", "Aloe Vera", "Herbs", "Spices", "Basil", "Coriander",
+        "Mint", "Thyme", "Oregano", "Parsley", "Saffron", "Turmeric",
+        "Ginger", "Cardamom", "Cloves", "Cinnamon", "Nutmeg", "Pepper",
+        "Vanilla", "Sesame", "Flaxseed", "Mustard", "Cashew", "Pistachio",
+        "Walnut", "Almond", "Peanut", "Chestnut", "Macadamia", "Hazelnut",
+        "Quinoa", "Amaranth", "Buckwheat", "Chia Seeds", "Hemp Seeds",
+        "Bamboo", "Rubber", "Tobacco", "Mulberry", "Jute", "Kenaf", "Hemp"
+      ];
+
+      const cropListContainer = document.getElementById("crop-list");
+
+      // Populate the list dynamically
+      crops.forEach((crop, index) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${index + 1}. ${crop}`;
+        cropListContainer.appendChild(listItem);
+      });
+
+      // Filter crops based on search input
+      function filterCrops() {
+        const searchInput = document.getElementById("search-box").value.toLowerCase();
+        const cropItems = cropListContainer.getElementsByTagName("li");
+
+        Array.from(cropItems).forEach(item => {
+          const cropName = item.textContent.toLowerCase();
+          item.style.display = cropName.includes(searchInput) ? "" : "none";
+        });
+      }
+    </script>
+  </body>
+</html>

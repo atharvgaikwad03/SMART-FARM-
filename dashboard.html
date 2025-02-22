@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer's Dashboard</title>
+    <link rel="stylesheet" href="style_dash.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container full-width">
+        <h1>🌱 Welcome, <span id="farmer-name">Farmer</span>! 🌾</h1>
+        <p>Manage your crop records easily.</p>
+        <div id="flash-messages" class="flash-messages"></div>
+    </div>
+    
+    <script>
+        // Fetch farmer's name from sessionStorage and update the UI
+        document.addEventListener("DOMContentLoaded", function () {
+            const farmerName = sessionStorage.getItem("farmerName");
+            if (farmerName) {
+                document.getElementById("farmer-name").innerText = farmerName;
+            }
+        });
+    </script>
+    
+
+    <div class="row">
+        <!-- Add New Crop Entry -->
+        <div class="container column">
+            <h2>🌾 Add New Crop Entry</h2>
+            <form id="crop-form">
+                <label for="crop_name">Crop Name:</label>
+                <input type="text" id="crop_name" name="crop_name" required>
+
+                <label for="plantation_date">Plantation Date:</label>
+                <input type="date" id="plantation_date" name="plantation_date" required>
+
+                <label for="harvest_date">Expected Harvest Date:</label>
+                <input type="date" id="harvest_date" name="harvest_date" required>
+
+                <button type="submit" class="btn">Save Crop</button>
+            </form>
+        </div>
+
+        <!-- Update Growth Stages -->
+        <div class="container column">
+            <h2>🌱 Update Growth Stages</h2>
+            <form id="growth-form">
+                <label for="fertilization">Fertilization Date:</label>
+                <input type="date" id="fertilization" name="fertilization">
+
+                <label for="watering">Watering Date:</label>
+                <input type="date" id="watering" name="watering">
+
+                <label for="pest_control">Pest Control Done?</label>
+                <select id="pest_control" name="pest_control">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+
+                <button type="submit" class="btn">Update Growth</button>
+            </form>
+        </div>
+
+        <!-- Harvest Records -->
+        <div class="container column">
+            <h2>🌾 Harvest Records</h2>
+            <form id="harvest-form">
+                <label for="actual_harvest_date">Actual Harvest Date:</label>
+                <input type="date" id="actual_harvest_date" name="actual_harvest_date" required>
+
+                <label for="yield_quantity">Yield Quantity (kg):</label>
+                <input type="number" id="yield_quantity" name="yield_quantity" required>
+
+                <label for="observations">Observations:</label>
+                <textarea id="observations" name="observations" rows="3"></textarea>
+
+                <button type="submit" class="btn">Save Harvest Record</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showMessage(message, type = "success") {
+            $("#flash-messages").html(`<p class="flash ${type}">${message}</p>`);
+            setTimeout(() => $("#flash-messages").html(""), 3000);
+        }
+
+        $(document).ready(function () {
+            $("#crop-form").submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+    type: "POST",
+    url: "/save_crop",
+    data: $(this).serialize(),
+    xhrFields: { withCredentials: true },  // 🔹 Ensure session cookies are sent
+    success: function (response) {
+        showMessage("Crop details saved successfully!");
+        $("#crop-form")[0].reset();
+    },
+    error: function (xhr) {
+        console.log("AJAX Error:", xhr.responseText);  // Debug AJAX errors
+        showMessage("Error: " + xhr.responseText, "error");
+    }
+});
+
+            });
+
+            $("#growth-form").submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/update_growth",
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        showMessage("Growth stages updated successfully!");
+                        $("#growth-form")[0].reset();
+                    },
+                    error: function (xhr) {
+                        showMessage("Error: " + xhr.responseText, "error");
+                    }
+                });
+            });
+
+            $("#harvest-form").submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/save_harvest",
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        showMessage("Harvest record saved successfully!");
+                        $("#harvest-form")[0].reset();
+                    },
+                    error: function (xhr) {
+                        showMessage("Error: " + xhr.responseText, "error");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
